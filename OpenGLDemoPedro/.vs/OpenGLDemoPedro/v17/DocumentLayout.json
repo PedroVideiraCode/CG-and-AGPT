@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Videira\\source\\repos\\OpenGLDemoPedro\\",
+  "WorkspaceRootPath": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BE04648F-5C7E-4A2A-8DF7-1D26061EA327}|OpenGLDemoPedro\\OpenGLDemoPedro.vcxproj|C:\\Users\\Videira\\source\\repos\\OpenGLDemoPedro\\OpenGLDemoPedro\\OpenGLDemoPedro.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{BE04648F-5C7E-4A2A-8DF7-1D26061EA327}|OpenGLDemoPedro\\OpenGLDemoPedro.vcxproj|C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\OpenGLDemoPedro.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{BE04648F-5C7E-4A2A-8DF7-1D26061EA327}|OpenGLDemoPedro\\OpenGLDemoPedro.vcxproj|solutionrelative:OpenGLDemoPedro\\OpenGLDemoPedro.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -24,9 +24,9 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "OpenGLDemoPedro.cpp",
-              "DocumentMoniker": "C:\\Users\\Videira\\source\\repos\\OpenGLDemoPedro\\OpenGLDemoPedro\\OpenGLDemoPedro.cpp",
+              "DocumentMoniker": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\OpenGLDemoPedro.cpp",
               "RelativeDocumentMoniker": "OpenGLDemoPedro\\OpenGLDemoPedro.cpp",
-              "ToolTip": "C:\\Users\\Videira\\source\\repos\\OpenGLDemoPedro\\OpenGLDemoPedro\\OpenGLDemoPedro.cpp",
+              "ToolTip": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\OpenGLDemoPedro.cpp",
               "RelativeToolTip": "OpenGLDemoPedro\\OpenGLDemoPedro.cpp",
               "ViewState": "AgIAAFcAAAAAAAAAAAAAAGIAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",

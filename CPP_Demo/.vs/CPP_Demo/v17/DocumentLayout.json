@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Videira\\source\\repos\\CPP_Demo\\",
+  "WorkspaceRootPath": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\CPP_Demo\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{5376F416-11E2-4BDC-A529-7FF206967C71}|CPP_Demo\\CPP_Demo.vcxproj|C:\\Users\\Videira\\source\\repos\\CPP_Demo\\CPP_Demo\\CPP_Demo.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{5376F416-11E2-4BDC-A529-7FF206967C71}|CPP_Demo\\CPP_Demo.vcxproj|C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\CPP_Demo\\CPP_Demo\\CPP_Demo.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{5376F416-11E2-4BDC-A529-7FF206967C71}|CPP_Demo\\CPP_Demo.vcxproj|solutionrelative:CPP_Demo\\CPP_Demo.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -24,11 +24,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "CPP_Demo.cpp",
-              "DocumentMoniker": "C:\\Users\\Videira\\source\\repos\\CPP_Demo\\CPP_Demo\\CPP_Demo.cpp",
+              "DocumentMoniker": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\CPP_Demo\\CPP_Demo\\CPP_Demo.cpp",
               "RelativeDocumentMoniker": "CPP_Demo\\CPP_Demo.cpp",
-              "ToolTip": "C:\\Users\\Videira\\source\\repos\\CPP_Demo\\CPP_Demo\\CPP_Demo.cpp",
+              "ToolTip": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\CPP_Demo\\CPP_Demo\\CPP_Demo.cpp",
               "RelativeToolTip": "CPP_Demo\\CPP_Demo.cpp",
-              "ViewState": "AgIAAEoBAAAAAAAAAAAQwFQBAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAAFABAAAAAAAAAAAAAF0BAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-09-23T11:55:08.119Z",
               "EditorCaption": ""
