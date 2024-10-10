@@ -1,3 +1,2 @@
 ﻿  CPP_Demo.cpp
-C:\Users\Videira\source\repos\CPP_Demo\CPP_Demo\CPP_Demo.cpp(333,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-  CPP_Demo.vcxproj -> C:\Users\Videira\source\repos\CPP_Demo\x64\Debug\CPP_Demo.exe
+  CPP_Demo.vcxproj -> C:\Users\Videira\Documents\GitHub\CG and AGPT\CPP_Demo\x64\Debug\CPP_Demo.exe

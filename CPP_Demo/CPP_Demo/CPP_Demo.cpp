@@ -1,7 +1,4 @@
-﻿// CPP_Demo.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <cstdlib>
 #include <random>
@@ -9,8 +6,11 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "Vector.hpp"	// get Vector’s interface
+#include <cmath>	// get the the standard-library math function interface including sqrt()
 
 using namespace std;
+
 int main() {
 
 							//	bool		// Boolean, possible values are true or false
@@ -319,40 +319,41 @@ int main() {
 
 	//9 --------------------------------------------
 
-	using std::cout;
-	using std::cin;
-	using std::string;
-	string response;	
-	float number;
-	int numberOfDivisions;
-	int decimalPlaces;
-	static float responseSquere;
+	//using std::cout;
+	//using std::cin;
+	//using std::string;
+	//string response;	
+	//float number;
+	//int numberOfDivisions;
+	//int decimalPlaces;
+	//static float responseSquere;
 
-	cout << "Give me a Number:";
-	cin >> response;
-	number = std::stoi(response);
+	//cout << "Give me a Number:";
+	//cin >> response;
+	//number = std::stoi(response);
 
-	cout << "How many times should i do the squere root ?:";
-	cin >> response;
-	numberOfDivisions = std::stoi(response);
+	//cout << "How many times should i do the squere root ?:";
+	//cin >> response;
+	//numberOfDivisions = std::stoi(response);
 
-	cout << "Decimal places:";
-	cin >> response;
-	decimalPlaces = std::stoi(response);
+	//cout << "Decimal places:";
+	//cin >> response;
+	//decimalPlaces = std::stoi(response);
 
-	for (size_t i = 0; i < numberOfDivisions; i++)
-	{
-		if (i == 1)
-		{
-			responseSquere = number / 2;
-		}
-		else
-		{
-			responseSquere = (responseSquere + (number / responseSquere)) / 2;
-		}
-	}
-	cout << "Result:" << responseSquere;
+	//for (size_t i = 0; i < numberOfDivisions; i++)
+	//{
+	//	if (i == 1)
+	//	{
+	//		responseSquere = number / 2;
+	//	}
+	//	else
+	//	{
+	//		responseSquere = (responseSquere + (number / responseSquere)) / 2;
+	//	}
+	//}
+	//cout << "Result:" << responseSquere;
 
+	
 
-	return 0;
+	//return 0;
 }
