@@ -3,6 +3,9 @@
 #include "SDL.h"
 #include <glad/glad.h>
 #include "stb_image.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 //#undef main
 //#ifdef __APPLE__
@@ -86,11 +89,13 @@ int main(int argc, char** argv)
 		out vec3 Color;
 		out vec2 TexCoord;
 
+		uniform mat4 transform; 
+
 		void main()
 		{
-			Color = color;
-			TexCoord = texCoord;
-			gl_Position = vec4(position, 1.0);
+		gl_Position = transform * vec4(position, 1.0);
+		Color = color;
+		TexCoord = texCoord;
 
 		}
 		)glsl";
@@ -239,6 +244,7 @@ int main(int argc, char** argv)
 
 
 //Window-----------------------------------------------------------------------------------------------------
+	int start = SDL_GetTicks();
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -251,6 +257,18 @@ int main(int argc, char** argv)
 			if (windowEvent.type == SDL_QUIT) break;
 		}
 
+		int now = SDL_GetTicks();
+		float time = (now - start) / 1000.0f;
+
+		glm::mat4 trans(1.0f);
+		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		trans = glm::rotate(trans, time, glm::vec3(0.0f, 0.0f, 1.0f));
+		trans = glm::scale(trans, glm::vec3(glm::cos(time), glm::cos(time), 1.0f));
+
+		unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
+		//-----------------------------------------------------------------------------------------------------
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -264,6 +282,8 @@ int main(int argc, char** argv)
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+
 
 		SDL_GL_SwapWindow(window);
 	}
