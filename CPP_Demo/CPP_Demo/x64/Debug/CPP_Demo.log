@@ -1,2 +1,4 @@
 ﻿  Main.cpp
+C:\Users\Videira\Documents\GitHub\CG and AGPT\CPP_Demo\CPP_Demo\Main.cpp(99,34): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Videira\Documents\GitHub\CG and AGPT\CPP_Demo\CPP_Demo\Main.cpp(101,34): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   CPP_Demo.vcxproj -> C:\Users\Videira\Documents\GitHub\CG and AGPT\CPP_Demo\x64\Debug\CPP_Demo.exe
