@@ -6,7 +6,16 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <math.h>
+#include <stdexcept>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <cmath>	// get the the standard-library math function interface including sqrt()
+#include "objLoader.h"
 
+using namespace std;
 //#undef main
 //#ifdef __APPLE__
 //#include <SDL2/SDL.h>
@@ -54,6 +63,8 @@ int main(int argc, char** argv)
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
 	};
+
+	
 
 	//float -> 32 bit = 4 bytes
 	//double -> 64 bit = 8 bytes
@@ -175,6 +186,8 @@ int main(int argc, char** argv)
 	GLint texCoordAttrib = glGetAttribLocation(shaderProgram, "texCoord");
 	glEnableVertexAttribArray(texCoordAttrib);
 	glVertexAttribPointer(texCoordAttrib, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+
+
 
 
 
