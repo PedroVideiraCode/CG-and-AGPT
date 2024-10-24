@@ -23,6 +23,9 @@ using namespace std;
 //#include <SDL.h>
 //#endif
 
+float screenWidth = 800;
+float screenHeight = 600;
+
 int main(int argc, char** argv)
 {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -32,7 +35,8 @@ int main(int argc, char** argv)
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
 
-	SDL_Window* window = SDL_CreateWindow("OpenGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
+
+	SDL_Window* window = SDL_CreateWindow("OpenGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_OPENGL);
 	if (window == nullptr)
 	{
 		std::cout << "Failed to create SDL Window" << std::endl;
@@ -49,26 +53,75 @@ int main(int argc, char** argv)
 		return -2;
 	}
 
+
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	float vertices[] = {
-		// positions         // colors           // texture coords
-		0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f,   // top right
-		0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 1.0f,   1.0f, 0.0f,   // bottom right
-	   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 0.0f,   0.0f, 0.0f,   // bottom left
-	   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
 
-	unsigned int indices[] = {  // note that we start from 0!
-		0, 1, 3,   // first triangle
-		1, 2, 3    // second triangle
+	glm::vec3 cubePositions[] = {
+	glm::vec3(0.0f,  0.0f,  0.0f),
+	glm::vec3(2.0f,  5.0f, -15.0f),
+	glm::vec3(-1.5f, -2.2f, -2.5f),
+	glm::vec3(-3.8f, -2.0f, -12.3f),
+	glm::vec3(2.4f, -0.4f, -3.5f),
+	glm::vec3(-1.7f,  3.0f, -7.5f),
+	glm::vec3(1.3f, -2.0f, -2.5f),
+	glm::vec3(1.5f,  2.0f, -2.5f),
+	glm::vec3(1.5f,  0.2f, -1.5f),
+	glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
-
-	
 
 	//float -> 32 bit = 4 bytes
 	//double -> 64 bit = 8 bytes
 
+
+	std::vector< glm::vec3 > vertices_;
+	std::vector< glm::vec2 > uvs;
+	std::vector< glm::vec3 > normals; // Won't be used at the moment.
+	bool res = loadOBJ("Woodenchair.obj", vertices_, uvs, normals);
 
 	GLuint vbo; // vertex buffer object
 	glGenBuffers(1, &vbo); // Generate 1 buffer
@@ -83,32 +136,41 @@ int main(int argc, char** argv)
 	glBindVertexArray(vao);
 
 	// 2. copy our vertices array in a buffer for OpenGL to use
+
+
+
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), &vertices_[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+
+
+
+
+
 
 //Vertex Shader--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	const char* vertexShaderSource = R"glsl(
-		#version 330 core
+	in vec3 position;
+	in vec3 color;
+	in vec2 texCoord;
 
-		in vec3 position;
-		in vec3 color;
-		in vec2 texCoord;
-		
-		out vec3 Color;
-		out vec2 TexCoord;
+	out vec3 Color;
+	out vec2 TexCoord;
 
-		uniform mat4 transform; 
+	uniform mat4 model;
+	uniform mat4 view;
+	uniform mat4 projection;
 
-		void main()
-		{
-		gl_Position = transform * vec4(position, 1.0);
+	void main()
+	{
 		Color = color;
 		TexCoord = texCoord;
-
-		}
+		gl_Position = projection * view * model * vec4(position, 1.0);
+	}
 		)glsl";
 
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER); // Create a vertex shader
@@ -177,15 +239,15 @@ int main(int argc, char** argv)
 	// 3. then set our vertex attributes pointers
 	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
 	glEnableVertexAttribArray(posAttrib);
-	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-	GLint colorAttrib = glGetAttribLocation(shaderProgram, "color");
-	glEnableVertexAttribArray(colorAttrib);
-	glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	//GLint colorAttrib = glGetAttribLocation(shaderProgram, "color");
+	//glEnableVertexAttribArray(colorAttrib);
+	//glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	GLint texCoordAttrib = glGetAttribLocation(shaderProgram, "texCoord");
 	glEnableVertexAttribArray(texCoordAttrib);
-	glVertexAttribPointer(texCoordAttrib, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glVertexAttribPointer(texCoordAttrib, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(3 * sizeof(float)));
 
 
 
@@ -256,15 +318,22 @@ int main(int argc, char** argv)
 	glUniform1i(textureLocation2, 1);
 
 
+
+
 //Window-----------------------------------------------------------------------------------------------------
 	int start = SDL_GetTicks();
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
+
+
+
 	SDL_Event windowEvent;
 
 	while (true)
 	{
+
+
 		if (SDL_PollEvent(&windowEvent))
 		{
 			if (windowEvent.type == SDL_QUIT) break;
@@ -273,17 +342,31 @@ int main(int argc, char** argv)
 		int now = SDL_GetTicks();
 		float time = (now - start) / 1000.0f;
 
-		glm::mat4 trans(1.0f);
-		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-		trans = glm::rotate(trans, time, glm::vec3(0.0f, 0.0f, 1.0f));
-		trans = glm::scale(trans, glm::vec3(glm::cos(time), glm::cos(time), 1.0f));
+		glm::mat4 model(1.0f);
+		model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));
 
-		unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+		glm::mat4 view = glm::mat4(1.0f);
+		// note that we're translating the scene in the reverse direction of where we want to move
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10));
+		view = glm::rotate(view, time, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		glm::mat4 projection;
+		projection = glm::perspective(glm::radians(45.0f), screenWidth / screenHeight, 0.1f, 100.0f);
+
+		GLuint modelLocation = glGetUniformLocation(shaderProgram, "model");
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+		GLuint viewLocation = glGetUniformLocation(shaderProgram, "view");
+		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+
+		GLuint projectionLocation = glGetUniformLocation(shaderProgram, "projection");
+		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+
 
 		//-----------------------------------------------------------------------------------------------------
 
-		glClear(GL_COLOR_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(shaderProgram);
 		glBindVertexArray(vao);
@@ -294,9 +377,16 @@ int main(int argc, char** argv)
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//for (unsigned int i = 0; i < 10; ++i)
+		//{
+		//	glm::mat4 model(1.0f);
+		//	model = glm::translate(model, cubePositions[i]);
+		//	model = glm::rotate(model, time, glm::vec3(0.5f, 1.0f, 0.0f));
+		//	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
-
+		//	glDrawArrays(GL_TRIANGLES, 0, 36);
+		//}
+		glDrawArrays(GL_TRIANGLES, 0, vertices_.size());
 
 		SDL_GL_SwapWindow(window);
 	}
@@ -306,3 +396,12 @@ int main(int argc, char** argv)
 	SDL_Quit();
 	return 0;
 }
+
+
+
+//glm::mat4 trans(1.0f);
+////trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+////trans = glm::rotate(trans, time, glm::vec3(0.0f, 0.0f, 1.0f));
+////trans = glm::scale(trans, glm::vec3(glm::cos(time), glm::cos(time), 1.0f));
+//unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
