@@ -61,44 +61,66 @@ bool loadOBJ(const char* path, std::vector<glm::vec3>& out_vertices, std::vector
 
         else if (strcmp(lineHeader, "f") == 0) {
 
-            unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-            //if (int matches = fscanf_s(file, "%u/%u/%u %u/%u/%u %u/%u/%u\n",
-            //    &vertexIndex[0], &uvIndex[0], &normalIndex[0],
-            //    &vertexIndex[1], &uvIndex[1], &normalIndex[1],
-            //    &vertexIndex[2], &uvIndex[2], &normalIndex[2]))
-            //{
-            //    if (matches != 9) {
-            //        printf("File can't be read by our simple parser: Try exporting with other options 1\n");
-            //        return false;
-            //    }
-
-            //    vertexIndices.push_back(vertexIndex[0]);
-            //    vertexIndices.push_back(vertexIndex[1]);
-            //    vertexIndices.push_back(vertexIndex[2]);
-            //    uvIndices.push_back(uvIndex[0]);
-            //    uvIndices.push_back(uvIndex[1]);
-            //    uvIndices.push_back(uvIndex[2]);
-            //    normalIndices.push_back(normalIndex[0]);
-            //    normalIndices.push_back(normalIndex[1]);
-            //    normalIndices.push_back(normalIndex[2]);
-            //    printf("f\n");
-            //}
+            unsigned int vertexIndex[4], uvIndex[4], normalIndex[4];
+            long posicao_armazenada = ftell(file);
+            if (int matches = fscanf_s(file, "%u/%u/%u %u/%u/%u %u/%u/%u %u/%u/%u\n",
+                &vertexIndex[0], &uvIndex[0], &normalIndex[0],
+                &vertexIndex[1], &uvIndex[1], &normalIndex[1],
+                &vertexIndex[2], &uvIndex[2], &normalIndex[2],
+                &vertexIndex[3], &uvIndex[3], &normalIndex[3]))
+            {
+                if (matches == 12)
+                {
+                    vertexIndices.push_back(vertexIndex[0]);
+                    vertexIndices.push_back(vertexIndex[1]);
+                    vertexIndices.push_back(vertexIndex[2]);
+                    vertexIndices.push_back(vertexIndex[0]);
+                    vertexIndices.push_back(vertexIndex[2]);
+                    vertexIndices.push_back(vertexIndex[3]);
+                    uvIndices.push_back(uvIndex[0]);
+                    uvIndices.push_back(uvIndex[1]);
+                    uvIndices.push_back(uvIndex[2]);
+                    uvIndices.push_back(uvIndex[0]);
+                    uvIndices.push_back(uvIndex[2]);
+                    uvIndices.push_back(uvIndex[3]);
+                    normalIndices.push_back(normalIndex[0]);
+                    normalIndices.push_back(normalIndex[1]);
+                    normalIndices.push_back(normalIndex[2]);
+                    normalIndices.push_back(normalIndex[0]);
+                    normalIndices.push_back(normalIndex[2]);
+                    normalIndices.push_back(normalIndex[3]);
+                    printf("f\n");
+                }
+                if (matches == 9)
+                {
+                    vertexIndices.push_back(vertexIndex[0]);
+                    vertexIndices.push_back(vertexIndex[1]);
+                    vertexIndices.push_back(vertexIndex[2]);
+                    uvIndices.push_back(uvIndex[0]);
+                    uvIndices.push_back(uvIndex[1]);
+                    uvIndices.push_back(uvIndex[2]);
+                    normalIndices.push_back(normalIndex[0]);
+                    normalIndices.push_back(normalIndex[1]);
+                    normalIndices.push_back(normalIndex[2]);
+                    printf("f\n");
+                }
+            }
+            fseek(file, posicao_armazenada, SEEK_SET);
             if (int matches = fscanf_s(file, "%u %u %u\n",
                 &vertexIndex[0],
                 &vertexIndex[1],
                 &vertexIndex[2]))
             {
-                if (matches != 3) {
-                    printf("File can't be read by our simple parser: Try exporting with other options 2\n");
-                    return false;
-                }
+                if (matches == 3)
+                {
+                    vertexIndices.push_back(vertexIndex[0]);
+                    vertexIndices.push_back(vertexIndex[1]);
+                    vertexIndices.push_back(vertexIndex[2]);
 
-                vertexIndices.push_back(vertexIndex[0]);
-                vertexIndices.push_back(vertexIndex[1]);
-                vertexIndices.push_back(vertexIndex[2]);
-                printf("f\n");
+                }
             }
         }
+        printf("f\n");
     }
 
     for (unsigned int i = 0; i < vertexIndices.size(); i++)
@@ -106,6 +128,21 @@ bool loadOBJ(const char* path, std::vector<glm::vec3>& out_vertices, std::vector
         unsigned int vertexIndex = vertexIndices[i];
         glm::vec3 vertex = temp_vertices[vertexIndex - 1];
         out_vertices.push_back(vertex);
-        printf("push\n");
     }
+    printf("push_v\n");
+    for (unsigned int i = 0; i < normalIndices.size(); i++)
+    {
+        unsigned int normalIndex = normalIndices[i];
+        glm::vec3 normal = temp_normals[normalIndex - 1];
+        out_normals.push_back(normal);
+
+    }
+    printf("push_n\n");
+    for (unsigned int i = 0; i < uvIndices.size(); i++)
+    {
+        unsigned int uvIndex = uvIndices[i];
+        glm::vec2 u = temp_uvs[uvIndex - 1];
+        out_uvs.push_back(u);
+    }
+    printf("push_uv\n");
 }

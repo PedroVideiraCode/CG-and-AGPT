@@ -1,5 +1,9 @@
 ﻿  OpenGLDemoPedro.cpp
 C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(39,111): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(39,98): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(389,47): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(304,47): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  objLoader.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Preview\VC\Tools\MSVC\14.42.34321\include\filesystem(12): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
+  Generating Code...
+C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\objLoader.cpp(148,1): warning C4715: 'loadOBJ': not all control paths return a value
   OpenGLDemoPedro.vcxproj -> C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\x64\Debug\OpenGLDemoPedro.exe

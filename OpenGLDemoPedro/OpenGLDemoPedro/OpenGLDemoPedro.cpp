@@ -54,70 +54,6 @@ int main(int argc, char** argv)
 	}
 
 
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-	float vertices[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-	};
-
-	glm::vec3 cubePositions[] = {
-	glm::vec3(0.0f,  0.0f,  0.0f),
-	glm::vec3(2.0f,  5.0f, -15.0f),
-	glm::vec3(-1.5f, -2.2f, -2.5f),
-	glm::vec3(-3.8f, -2.0f, -12.3f),
-	glm::vec3(2.4f, -0.4f, -3.5f),
-	glm::vec3(-1.7f,  3.0f, -7.5f),
-	glm::vec3(1.3f, -2.0f, -2.5f),
-	glm::vec3(1.5f,  2.0f, -2.5f),
-	glm::vec3(1.5f,  0.2f, -1.5f),
-	glm::vec3(-1.3f,  1.0f, -1.5f)
-	};
-
-	//float -> 32 bit = 4 bytes
-	//double -> 64 bit = 8 bytes
-
-
 	std::vector< glm::vec3 > vertices_;
 	std::vector< glm::vec2 > uvs;
 	std::vector< glm::vec3 > normals; // Won't be used at the moment.
@@ -145,12 +81,6 @@ int main(int argc, char** argv)
 	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), &vertices_[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-
-
-
-
-
-
 
 //Vertex Shader--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	const char* vertexShaderSource = R"glsl(
@@ -187,7 +117,7 @@ int main(int argc, char** argv)
 	}
 
 //Fragment Shader-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+	//outColor = mix(colTex1, colTex2, 0.5);
 	const char* fragmentShaderSource = R"glsl(
 		#version 330 core
 		in vec3 Color;
@@ -202,8 +132,8 @@ int main(int argc, char** argv)
 		{
 			vec4 colTex1 = texture(ourTexture, TexCoord);
 			vec4 colTex2 = texture(ourTexture2, TexCoord);
-			outColor = mix(colTex1, colTex2, 0.5);
-			outColor = mix(outColor, vec4(Color, 1.0), 0.5);
+
+			outColor = colTex1;
 
 		})glsl";
 
@@ -240,23 +170,23 @@ int main(int argc, char** argv)
 	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
 	glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	
+	if (uvs.size()>0)
+	{
+		GLuint uvBuffer;
+		glGenBuffers(1, &uvBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+		glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 
-	//GLint colorAttrib = glGetAttribLocation(shaderProgram, "color");
-	//glEnableVertexAttribArray(colorAttrib);
-	//glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-
-	GLint texCoordAttrib = glGetAttribLocation(shaderProgram, "texCoord");
-	glEnableVertexAttribArray(texCoordAttrib);
-	glVertexAttribPointer(texCoordAttrib, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(3 * sizeof(float)));
-
-
-
-
+		GLint texCoordAttribObj = glGetAttribLocation(shaderProgram, "texCoord");
+		glEnableVertexAttribArray(texCoordAttribObj);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+		glVertexAttribPointer(texCoordAttribObj, 2, GL_FLOAT, GL_FALSE, 0 * sizeof(float), (void*)(0 * sizeof(float)));
+	}
 
 	GLuint texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-
 
 	// set the texture wrapping/filtering options (on the currently bound texture object)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -267,7 +197,7 @@ int main(int argc, char** argv)
 	stbi_set_flip_vertically_on_load(true);
 
 	int width, height, nrChannels;
-	unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load("PenguinDiffuseColor.jpg", &width, &height, &nrChannels, 0);
 	if (data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -317,23 +247,15 @@ int main(int argc, char** argv)
 	glUniform1i(textureLocation, 0);
 	glUniform1i(textureLocation2, 1);
 
-
-
-
-//Window-----------------------------------------------------------------------------------------------------
+	//Window-----------------------------------------------------------------------------------------------------
 	int start = SDL_GetTicks();
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-
-
 
 	SDL_Event windowEvent;
 
 	while (true)
 	{
-
-
 		if (SDL_PollEvent(&windowEvent))
 		{
 			if (windowEvent.type == SDL_QUIT) break;
@@ -342,12 +264,15 @@ int main(int argc, char** argv)
 		int now = SDL_GetTicks();
 		float time = (now - start) / 1000.0f;
 
+		//-----------------------------------------------------------------------------------------------------
+
 		glm::mat4 model(1.0f);
-		model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));
 
 		glm::mat4 view = glm::mat4(1.0f);
 		// note that we're translating the scene in the reverse direction of where we want to move
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10));
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5));
 		view = glm::rotate(view, time, glm::vec3(0.0f, 1.0f, 0.0f));
 
 		glm::mat4 projection;
@@ -362,12 +287,11 @@ int main(int argc, char** argv)
 		GLuint projectionLocation = glGetUniformLocation(shaderProgram, "projection");
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 
-
 		//-----------------------------------------------------------------------------------------------------
-
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// Draw .obj ---------------------------------------------------------------------------------------------------------------------
 		glUseProgram(shaderProgram);
 		glBindVertexArray(vao);
 
@@ -377,15 +301,6 @@ int main(int argc, char** argv)
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
-		//for (unsigned int i = 0; i < 10; ++i)
-		//{
-		//	glm::mat4 model(1.0f);
-		//	model = glm::translate(model, cubePositions[i]);
-		//	model = glm::rotate(model, time, glm::vec3(0.5f, 1.0f, 0.0f));
-		//	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-		//	glDrawArrays(GL_TRIANGLES, 0, 36);
-		//}
 		glDrawArrays(GL_TRIANGLES, 0, vertices_.size());
 
 		SDL_GL_SwapWindow(window);
@@ -397,7 +312,26 @@ int main(int argc, char** argv)
 	return 0;
 }
 
+//GLuint normalbuffer;
+//glGenBuffers(1, &normalbuffer);
+//glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+//glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
 
+//-----------------------------------------------------------------------------------------------------
+
+//GLint colorAttrib = glGetAttribLocation(shaderProgram, "color");
+//glEnableVertexAttribArray(colorAttrib);
+//glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+// 
+//for (unsigned int i = 0; i < 10; ++i)
+//{
+//	glm::mat4 model(1.0f);
+//	model = glm::translate(model, cubePositions[i]);
+//	model = glm::rotate(model, time, glm::vec3(0.5f, 1.0f, 0.0f));
+//	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+//	glDrawArrays(GL_TRIANGLES, 0, 36);
+//}
 
 //glm::mat4 trans(1.0f);
 ////trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
@@ -405,3 +339,66 @@ int main(int argc, char** argv)
 ////trans = glm::scale(trans, glm::vec3(glm::cos(time), glm::cos(time), 1.0f));
 //unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
 //glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//float vertices[] = {
+//	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+//	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+//	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+//	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+//	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+//	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+//
+//	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+//	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+//	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+//	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+//	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+//	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+//
+//	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+//	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+//	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+//	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+//	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+//	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+//
+//	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+//	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+//	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+//	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+//	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+//	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+//
+//	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+//	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+//	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+//	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+//	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+//	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+//
+//	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+//	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+//	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+//	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+//	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+//	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+//};
+//
+//glm::vec3 cubePositions[] = {
+//glm::vec3(0.0f,  0.0f,  0.0f),
+//glm::vec3(2.0f,  5.0f, -15.0f),
+//glm::vec3(-1.5f, -2.2f, -2.5f),
+//glm::vec3(-3.8f, -2.0f, -12.3f),
+//glm::vec3(2.4f, -0.4f, -3.5f),
+//glm::vec3(-1.7f,  3.0f, -7.5f),
+//glm::vec3(1.3f, -2.0f, -2.5f),
+//glm::vec3(1.5f,  2.0f, -2.5f),
+//glm::vec3(1.5f,  0.2f, -1.5f),
+//glm::vec3(-1.3f,  1.0f, -1.5f)
+//};
+//
+////float -> 32 bit = 4 bytes
+////double -> 64 bit = 8 bytes

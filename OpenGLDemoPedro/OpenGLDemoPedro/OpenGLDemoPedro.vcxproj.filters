@@ -43,5 +43,11 @@
     <Image Include="container.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="PenguinDiffuseColor.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="PenguinDiffuseColor.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
