@@ -1,5 +1,1 @@
-﻿  OpenGLDemoPedro.cpp
-C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(39,111): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(39,98): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(304,47): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  OpenGLDemoPedro.vcxproj -> C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\x64\Debug\OpenGLDemoPedro.exe
+﻿  OpenGLDemoPedro.vcxproj -> C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\x64\Debug\OpenGLDemoPedro.exe

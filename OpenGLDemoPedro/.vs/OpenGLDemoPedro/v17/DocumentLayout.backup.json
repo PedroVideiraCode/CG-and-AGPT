@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BE04648F-5C7E-4A2A-8DF7-1D26061EA327}|OpenGLDemoPedro\\OpenGLDemoPedro.vcxproj|C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\objLoader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{BE04648F-5C7E-4A2A-8DF7-1D26061EA327}|OpenGLDemoPedro\\OpenGLDemoPedro.vcxproj|solutionrelative:OpenGLDemoPedro\\objLoader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BE04648F-5C7E-4A2A-8DF7-1D26061EA327}|OpenGLDemoPedro\\OpenGLDemoPedro.vcxproj|C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\OpenGLDemoPedro.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{BE04648F-5C7E-4A2A-8DF7-1D26061EA327}|OpenGLDemoPedro\\OpenGLDemoPedro.vcxproj|solutionrelative:OpenGLDemoPedro\\OpenGLDemoPedro.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BE04648F-5C7E-4A2A-8DF7-1D26061EA327}|OpenGLDemoPedro\\OpenGLDemoPedro.vcxproj|C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\objLoader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{BE04648F-5C7E-4A2A-8DF7-1D26061EA327}|OpenGLDemoPedro\\OpenGLDemoPedro.vcxproj|solutionrelative:OpenGLDemoPedro\\objLoader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{BE04648F-5C7E-4A2A-8DF7-1D26061EA327}|OpenGLDemoPedro\\OpenGLDemoPedro.vcxproj|C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\objLoader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{BE04648F-5C7E-4A2A-8DF7-1D26061EA327}|OpenGLDemoPedro\\OpenGLDemoPedro.vcxproj|solutionrelative:OpenGLDemoPedro\\objLoader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -31,40 +27,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "objLoader.cpp",
-              "DocumentMoniker": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\objLoader.cpp",
-              "RelativeDocumentMoniker": "OpenGLDemoPedro\\objLoader.cpp",
-              "ToolTip": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\objLoader.cpp",
-              "RelativeToolTip": "OpenGLDemoPedro\\objLoader.cpp",
-              "ViewState": "AgIAAJIAAAAAAAAAAAAwwM0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-10-24T15:52:17.555Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "objLoader.h",
-              "DocumentMoniker": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\objLoader.h",
-              "RelativeDocumentMoniker": "OpenGLDemoPedro\\objLoader.h",
-              "ToolTip": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\objLoader.h",
-              "RelativeToolTip": "OpenGLDemoPedro\\objLoader.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-10-17T13:37:06.856Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "OpenGLDemoPedro.cpp",
               "DocumentMoniker": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\OpenGLDemoPedro.cpp",
               "RelativeDocumentMoniker": "OpenGLDemoPedro\\OpenGLDemoPedro.cpp",
               "ToolTip": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\OpenGLDemoPedro.cpp",
               "RelativeToolTip": "OpenGLDemoPedro\\OpenGLDemoPedro.cpp",
-              "ViewState": "AgIAAI4AAAAAAAAAAAAAAHEAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAAJMBAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-09-23T08:12:53.117Z",
+              "WhenOpened": "2024-10-26T14:01:46.754Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "objLoader.cpp",
+              "DocumentMoniker": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\objLoader.cpp",
+              "RelativeDocumentMoniker": "OpenGLDemoPedro\\objLoader.cpp",
+              "ToolTip": "C:\\Users\\Videira\\Documents\\GitHub\\CG and AGPT\\OpenGLDemoPedro\\OpenGLDemoPedro\\objLoader.cpp",
+              "RelativeToolTip": "OpenGLDemoPedro\\objLoader.cpp",
+              "ViewState": "AgIAAFcAAAAAAAAAAAAAAL4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-26T13:59:04.419Z"
             }
           ]
         }
