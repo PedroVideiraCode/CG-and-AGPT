@@ -1,1 +1,9 @@
-﻿  OpenGLDemoPedro.vcxproj -> C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\x64\Debug\OpenGLDemoPedro.exe
+﻿  OpenGLDemoPedro.cpp
+C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(63,14): warning C4244: 'initializing': conversion from 'Sint32' to 'float', possible loss of data
+C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(64,14): warning C4244: 'initializing': conversion from 'Sint32' to 'float', possible loss of data
+C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(126,111): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(126,98): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(362,22): warning C4244: 'initializing': conversion from 'Uint32' to 'float', possible loss of data
+C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(375,19): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\OpenGLDemoPedro\OpenGLDemoPedro.cpp(409,47): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  OpenGLDemoPedro.vcxproj -> C:\Users\Videira\Documents\GitHub\CG and AGPT\OpenGLDemoPedro\x64\Debug\OpenGLDemoPedro.exe

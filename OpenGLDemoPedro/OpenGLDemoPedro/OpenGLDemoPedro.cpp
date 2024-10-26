@@ -23,12 +23,99 @@ using namespace std;
 //#include <SDL.h>
 //#endif
 
-float screenWidth = 800;
-float screenHeight = 600;
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+float lastX = 400, lastY = 300;
+
+float pitch = 0.f;
+float yaw = -90.f;
+
+float fov = 45.f;
+
+SDL_Window* window;
+
+static void processKeyboardInput(float deltaTime)
+{
+	float cameraSpeed = 2.5f * deltaTime; // adjust accordingly
+	const Uint8* keyState;
+	keyState = SDL_GetKeyboardState(NULL);
+	if (keyState[SDL_SCANCODE_W])
+		cameraPos += cameraSpeed * cameraFront;
+	if (keyState[SDL_SCANCODE_S])
+		cameraPos -= cameraSpeed * cameraFront;
+	if (keyState[SDL_SCANCODE_A])
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	if (keyState[SDL_SCANCODE_D])
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	if (keyState[SDL_SCANCODE_E])
+		cameraPos += cameraSpeed * cameraUp;
+	if (keyState[SDL_SCANCODE_Q])
+		cameraPos -= cameraSpeed * cameraUp;
+}
+
+
+static void processMouseInput(SDL_Event ev, float deltaTime)
+{
+	if (ev.type == SDL_MOUSEMOTION)
+	{
+		float xpos = ev.button.x;
+		float ypos = ev.button.y;
+
+		static bool firstMouse = true;
+		if (firstMouse)
+		{
+			firstMouse = false;
+			lastX = xpos;
+			lastY = ypos;
+		}
+
+		float xoffset = xpos - lastX;
+		float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
+		SDL_WarpMouseInWindow(window, 400, 300);
+		lastX = 400; //xpos;
+		lastY = 300; //ypos;
+
+		float sensitivity = 0.05f;
+		xoffset *= sensitivity * 10;
+		yoffset *= sensitivity * 10;
+
+		yaw += xoffset;
+		pitch += yoffset;
+
+		if (pitch > 89.0f)
+			pitch = 89.0f;
+		if (pitch < -89.0f)
+			pitch = -89.0f;
+
+		glm::vec3 front;
+		front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+		front.y = sin(glm::radians(pitch));
+		front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+		cameraFront = glm::normalize(front);
+	}
+
+	if (ev.type == SDL_MOUSEWHEEL)
+	{
+		if (fov >= 1.0f && fov <= 45.0f)
+			fov -= ev.wheel.y;
+		if (fov <= 1.0f)
+			fov = 1.0f;
+		if (fov >= 45.0f)
+			fov = 45.0f;
+	}
+}
+
+
 
 int main(int argc, char** argv)
 {
 	SDL_Init(SDL_INIT_VIDEO);
+
+	float screenWidth = 800;
+	float screenHeight = 600;
+
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
@@ -57,7 +144,7 @@ int main(int argc, char** argv)
 	std::vector< glm::vec3 > vertices_;
 	std::vector< glm::vec2 > uvs;
 	std::vector< glm::vec3 > normals; // Won't be used at the moment.
-	bool res = loadOBJ("1.obj", vertices_, uvs, normals);
+	bool res = loadOBJ("PenguinBaseMesh.obj", vertices_, uvs, normals);
 
 	GLuint vbo; // vertex buffer object
 	glGenBuffers(1, &vbo); // Generate 1 buffer
@@ -73,42 +160,43 @@ int main(int argc, char** argv)
 
 	// 2. copy our vertices array in a buffer for OpenGL to use
 
-
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-		glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), &vertices_[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), &vertices_[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
 //Vertex Shader--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	const char* vertexShaderSource = R"glsl(
-	in vec3 position;
-	in vec3 color;
-	in vec2 texCoord;
+		#version 330 core
 
-	out vec3 Color;
-	out vec2 TexCoord;
+		in vec3 position;
+		in vec3 color;
+		in vec2 texCoord;
+		
+		out vec3 Color;
+		out vec2 TexCoord;
 
-	uniform mat4 model;
-	uniform mat4 view;
-	uniform mat4 projection;
+		uniform mat4 model;
+		uniform mat4 view;
+		uniform mat4 projection;
 
-	void main()
-	{
-		Color = color;
-		TexCoord = texCoord;
-		gl_Position = projection * view * model * vec4(position, 1.0);
-	}
+		void main()
+		{
+			Color = color;
+			TexCoord = texCoord;
+			gl_Position = projection * view * model * vec4(position, 1.0);
+		}
 		)glsl";
 
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER); // Create a vertex shader
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL); // Attach the shader source code
-	glCompileShader(vertexShader); // Compile the shader
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glCompileShader(vertexShader);
 
-	GLint success;
+	GLint  success;
 	char infoLog[512];
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+
 	if (!success)
 	{
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
@@ -132,16 +220,15 @@ int main(int argc, char** argv)
 		{
 			vec4 colTex1 = texture(ourTexture, TexCoord);
 			vec4 colTex2 = texture(ourTexture2, TexCoord);
-
 			outColor = colTex1;
-
 		})glsl";
 
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER); // Create a fragment shader
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL); // Attach the shader source code
-	glCompileShader(fragmentShader); // Compile the shader
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
 
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+
 	if (!success)
 	{
 		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
@@ -247,48 +334,66 @@ int main(int argc, char** argv)
 	glUniform1i(textureLocation, 0);
 	glUniform1i(textureLocation2, 1);
 
+	glm::mat4 model(1.0f);
+	//model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0, 0.0, 0.0));
+	//model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));
+
+	glm::mat4 projection;
+	projection = glm::perspective(glm::radians(fov), screenWidth / screenHeight, 0.1f, 100.0f);
+
+	GLuint modelLocation = glGetUniformLocation(shaderProgram, "model");
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+	GLuint viewLocation = glGetUniformLocation(shaderProgram, "view");
+	//glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+
+	GLuint projectionLocation = glGetUniformLocation(shaderProgram, "projection");
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+
 	//Window-----------------------------------------------------------------------------------------------------
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glEnable(GL_DEPTH_TEST);
+	
+	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	int start = SDL_GetTicks();
 
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	float deltaTime = 0.0f;	// Time between current frame and last frame
+	float lastFrameTime = SDL_GetTicks(); // Time of last frame
+
+
+	bool gameIsRunning = true;
+
+
 
 	SDL_Event windowEvent;
 
-	while (true)
+	while (gameIsRunning)
 	{
-		if (SDL_PollEvent(&windowEvent))
-		{
-			if (windowEvent.type == SDL_QUIT) break;
-		}
-
 		int now = SDL_GetTicks();
-		float time = (now - start) / 1000.0f;
+		float deltaTime = (now - lastFrameTime) / 1000.f;
+		lastFrameTime = now;
 
+		// Event Loop
+		while (SDL_PollEvent(&windowEvent) != 0)
+		{
+			if (windowEvent.type == SDL_QUIT)
+				gameIsRunning = false;
+
+			processMouseInput(windowEvent, deltaTime);
+		}
+		processKeyboardInput(deltaTime);
 		//-----------------------------------------------------------------------------------------------------
-
-		glm::mat4 model(1.0f);
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-		//model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));
-
-		glm::mat4 view = glm::mat4(1.0f);
-		// note that we're translating the scene in the reverse direction of where we want to move
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5));
-		view = glm::rotate(view, time, glm::vec3(0.0f, 1.0f, 0.0f));
-
-		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(45.0f), screenWidth / screenHeight, 0.1f, 100.0f);
-
-		GLuint modelLocation = glGetUniformLocation(shaderProgram, "model");
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-		GLuint viewLocation = glGetUniformLocation(shaderProgram, "view");
+		
+		// glm::mat4 view;
+		glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
 
-		GLuint projectionLocation = glGetUniformLocation(shaderProgram, "projection");
+		projection = glm::perspective(glm::radians(fov), screenWidth / screenHeight, 0.1f, 100.0f);
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 
+
 		//-----------------------------------------------------------------------------------------------------
-		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Draw .obj ---------------------------------------------------------------------------------------------------------------------
