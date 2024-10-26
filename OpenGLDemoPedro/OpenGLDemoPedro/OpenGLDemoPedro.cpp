@@ -57,7 +57,7 @@ int main(int argc, char** argv)
 	std::vector< glm::vec3 > vertices_;
 	std::vector< glm::vec2 > uvs;
 	std::vector< glm::vec3 > normals; // Won't be used at the moment.
-	bool res = loadOBJ("Woodenchair.obj", vertices_, uvs, normals);
+	bool res = loadOBJ("1.obj", vertices_, uvs, normals);
 
 	GLuint vbo; // vertex buffer object
 	glGenBuffers(1, &vbo); // Generate 1 buffer
@@ -77,8 +77,7 @@ int main(int argc, char** argv)
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), &vertices_[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), &vertices_[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
@@ -118,6 +117,7 @@ int main(int argc, char** argv)
 
 //Fragment Shader-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//outColor = mix(colTex1, colTex2, 0.5);
+
 	const char* fragmentShaderSource = R"glsl(
 		#version 330 core
 		in vec3 Color;

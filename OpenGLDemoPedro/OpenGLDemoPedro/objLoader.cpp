@@ -104,23 +104,80 @@ bool loadOBJ(const char* path, std::vector<glm::vec3>& out_vertices, std::vector
                     normalIndices.push_back(normalIndex[2]);
                     printf("f\n");
                 }
+                if (matches == 3)
+                {
+                    fseek(file, posicao_armazenada, SEEK_SET);
+                    if (int matches = fscanf_s(file, "%u/%u/%u\n",
+                        &vertexIndex[0],
+                        &vertexIndex[1],
+                        &vertexIndex[2]))
+                    {
+                        vertexIndices.push_back(vertexIndex[0]);
+                        vertexIndices.push_back(vertexIndex[1]);
+                        vertexIndices.push_back(vertexIndex[2]);
+                        printf("f\n");
+                    }
+                }
             }
             fseek(file, posicao_armazenada, SEEK_SET);
-            if (int matches = fscanf_s(file, "%u %u %u\n",
-                &vertexIndex[0],
-                &vertexIndex[1],
-                &vertexIndex[2]))
+            if (int matches = fscanf_s(file, "%u %u %u %u %u %u %u %u %u %u %u %u\n",
+                &vertexIndex[0], &uvIndex[0], &normalIndex[0],
+                &vertexIndex[1], &uvIndex[1], &normalIndex[1],
+                &vertexIndex[2], &uvIndex[2], &normalIndex[2],
+                &vertexIndex[3], &uvIndex[3], &normalIndex[3]))
             {
-                if (matches == 3)
+                if (matches == 12)
                 {
                     vertexIndices.push_back(vertexIndex[0]);
                     vertexIndices.push_back(vertexIndex[1]);
                     vertexIndices.push_back(vertexIndex[2]);
-
+                    vertexIndices.push_back(vertexIndex[0]);
+                    vertexIndices.push_back(vertexIndex[2]);
+                    vertexIndices.push_back(vertexIndex[3]);
+                    uvIndices.push_back(uvIndex[0]);
+                    uvIndices.push_back(uvIndex[1]);
+                    uvIndices.push_back(uvIndex[2]);
+                    uvIndices.push_back(uvIndex[0]);
+                    uvIndices.push_back(uvIndex[2]);
+                    uvIndices.push_back(uvIndex[3]);
+                    normalIndices.push_back(normalIndex[0]);
+                    normalIndices.push_back(normalIndex[1]);
+                    normalIndices.push_back(normalIndex[2]);
+                    normalIndices.push_back(normalIndex[0]);
+                    normalIndices.push_back(normalIndex[2]);
+                    normalIndices.push_back(normalIndex[3]);
+                    printf("f\n");
+                }
+                if (matches == 9)
+                {
+                    vertexIndices.push_back(vertexIndex[0]);
+                    vertexIndices.push_back(vertexIndex[1]);
+                    vertexIndices.push_back(vertexIndex[2]);
+                    uvIndices.push_back(uvIndex[0]);
+                    uvIndices.push_back(uvIndex[1]);
+                    uvIndices.push_back(uvIndex[2]);
+                    normalIndices.push_back(normalIndex[0]);
+                    normalIndices.push_back(normalIndex[1]);
+                    normalIndices.push_back(normalIndex[2]);
+                    printf("f\n");
+                }
+                if (matches == 3)
+                {
+                    fseek(file, posicao_armazenada, SEEK_SET);
+                    if (int matches = fscanf_s(file, "%u %u %u\n",
+                        &vertexIndex[0],
+                        &vertexIndex[1],
+                        &vertexIndex[2]))
+                    {
+                        vertexIndices.push_back(vertexIndex[0]);
+                        vertexIndices.push_back(vertexIndex[1]);
+                        vertexIndices.push_back(vertexIndex[2]);
+                        printf("f\n");
+                    }
                 }
             }
         }
-        printf("f\n");
+
     }
 
     for (unsigned int i = 0; i < vertexIndices.size(); i++)
