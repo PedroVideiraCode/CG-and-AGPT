@@ -1,137 +1,55 @@
-
 #include <iostream>
 #include "SDL.h"
+#include "Texture.h"
 #include <glad/glad.h>
-#include "stb_image.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <math.h>
-#include <stdexcept>
-#include <fstream>
-#include <sstream>
-#include <vector>
 #include <string>
-#include <cmath>	// get the the standard-library math function interface including sqrt()
 #include "objLoader.h"
+#include "Shader.h"
+#include "Camera.h"
+#include <filesystem>
+#include "Window.h"
+#include <glm/gtc/matrix_access.hpp>
 
 using namespace std;
-//#undef main
-//#ifdef __APPLE__
-//#include <SDL2/SDL.h>
-//#elif _WIN32
-//#include <SDL.h>
-//#endif
+namespace fs = std::filesystem;
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-float lastX = 400, lastY = 300;
+float lightPower = 1.0f;
+glm::vec3 materialDiffuseColor = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 materialSpecularColor = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 lightPosition ;
+float lightAmbientPower = 3;
+glm::vec3 materialAmbientColor = glm::vec3(0.1* lightAmbientPower, 0.1* lightAmbientPower, 0.1* lightAmbientPower);
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
 
-float pitch = 0.f;
-float yaw = -90.f;
+bool gameIsRunning = true;
+float timeElapsed = 0.0f;
 
-float fov = 45.f;
+glm::mat4 projection;
+glm::mat4 model = glm::mat4(1.f);
+glm::mat4 view;
 
+Window* windowH;
 SDL_Window* window;
-
-static void processKeyboardInput(float deltaTime)
-{
-	float cameraSpeed = 2.5f * deltaTime; // adjust accordingly
-	const Uint8* keyState;
-	keyState = SDL_GetKeyboardState(NULL);
-	if (keyState[SDL_SCANCODE_W])
-		cameraPos += cameraSpeed * cameraFront;
-	if (keyState[SDL_SCANCODE_S])
-		cameraPos -= cameraSpeed * cameraFront;
-	if (keyState[SDL_SCANCODE_A])
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-	if (keyState[SDL_SCANCODE_D])
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-	if (keyState[SDL_SCANCODE_E])
-		cameraPos += cameraSpeed * cameraUp;
-	if (keyState[SDL_SCANCODE_Q])
-		cameraPos -= cameraSpeed * cameraUp;
-}
-
-
-static void processMouseInput(SDL_Event ev, float deltaTime)
-{
-	if (ev.type == SDL_MOUSEMOTION)
-	{
-		float xpos = ev.button.x;
-		float ypos = ev.button.y;
-
-		static bool firstMouse = true;
-		if (firstMouse)
-		{
-			firstMouse = false;
-			lastX = xpos;
-			lastY = ypos;
-		}
-
-		float xoffset = xpos - lastX;
-		float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
-		SDL_WarpMouseInWindow(window, 400, 300);
-		lastX = 400; //xpos;
-		lastY = 300; //ypos;
-
-		float sensitivity = 0.05f;
-		xoffset *= sensitivity * 10;
-		yoffset *= sensitivity * 10;
-
-		yaw += xoffset;
-		pitch += yoffset;
-
-		if (pitch > 89.0f)
-			pitch = 89.0f;
-		if (pitch < -89.0f)
-			pitch = -89.0f;
-
-		glm::vec3 front;
-		front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
-		front.y = sin(glm::radians(pitch));
-		front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
-		cameraFront = glm::normalize(front);
-	}
-
-	if (ev.type == SDL_MOUSEWHEEL)
-	{
-		if (fov >= 1.0f && fov <= 45.0f)
-			fov -= ev.wheel.y;
-		if (fov <= 1.0f)
-			fov = 1.0f;
-		if (fov >= 45.0f)
-			fov = 45.0f;
-	}
-}
-
-
 
 int main(int argc, char** argv)
 {
-	SDL_Init(SDL_INIT_VIDEO);
 
 	float screenWidth = 800;
-	float screenHeight = 600;
-
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-
-
-
-	SDL_Window* window = SDL_CreateWindow("OpenGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_OPENGL);
-	if (window == nullptr)
-	{
-		std::cout << "Failed to create SDL Window" << std::endl;
-		SDL_Quit();
-		return -1;
-	}
-
+	float screenHeight = 600	;
+	windowH = new Window("SDL window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight);
+	window = windowH->GetWindow();
 	SDL_GLContext context = SDL_GL_CreateContext(window);
+	camera.setWindow(window);
+
+	SDL_ShowCursor(SDL_DISABLE);
+	SDL_CaptureMouse(SDL_TRUE);
+	SDL_SetRelativeMouseMode(SDL_TRUE);
+
 
 	if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
 	{
@@ -140,273 +58,226 @@ int main(int argc, char** argv)
 		return -2;
 	}
 
+	// Load Objs_________________________________________________________________________________________________________________________
 
-	std::vector< glm::vec3 > vertices_;
-	std::vector< glm::vec2 > uvs;
-	std::vector< glm::vec3 > normals; // Won't be used at the moment.
-	bool res = loadOBJ("PenguinBaseMesh.obj", vertices_, uvs, normals);
+	std::vector<std::string> file_names;
+	std::vector < std::vector< glm::vec3 >> vertices;
+	std::vector < std::vector< glm::vec2 >> uvs;
+	std::vector < std::vector< glm::vec3 >> normals;
 
-	GLuint vbo; // vertex buffer object
-	glGenBuffers(1, &vbo); // Generate 1 buffer
+	bool objs = loadOBJS(file_names, vertices, uvs, normals);
 
+	//_________________________________________________________________________________________________________________________
+
+	GLuint vbo;
+	glGenBuffers(1, &vbo);
 	GLuint ebo;
 	glGenBuffers(1, &ebo);
-
 	GLuint vao;
 	glGenVertexArrays(1, &vao);
-
-	// 1. bind Vertex Array Object
 	glBindVertexArray(vao);
-
-	// 2. copy our vertices array in a buffer for OpenGL to use
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), &vertices_[0], GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	Shader shader( "Shaders/VertexShader.glsl", "Shaders/FragmentShader.glsl");
 
-//Vertex Shader--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	const char* vertexShaderSource = R"glsl(
-		#version 330 core
+	shader.use();
 
-		in vec3 position;
-		in vec3 color;
-		in vec2 texCoord;
-		
-		out vec3 Color;
-		out vec2 TexCoord;
-
-		uniform mat4 model;
-		uniform mat4 view;
-		uniform mat4 projection;
-
-		void main()
-		{
-			Color = color;
-			TexCoord = texCoord;
-			gl_Position = projection * view * model * vec4(position, 1.0);
-		}
-		)glsl";
-
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-
-	GLint  success;
-	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-//Fragment Shader-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-	//outColor = mix(colTex1, colTex2, 0.5);
-
-	const char* fragmentShaderSource = R"glsl(
-		#version 330 core
-		in vec3 Color;
-		in vec2 TexCoord;
-
-		out vec4 outColor;
-
-		uniform sampler2D ourTexture;
-		uniform sampler2D ourTexture2;
-
-		void main()
-		{
-			vec4 colTex1 = texture(ourTexture, TexCoord);
-			vec4 colTex2 = texture(ourTexture2, TexCoord);
-			outColor = colTex1;
-		})glsl";
-
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-//Shader Program---------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-	GLuint shaderProgram;
-	shaderProgram = glCreateProgram();
-
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	// 3. then set our vertex attributes pointers
-	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
-	glEnableVertexAttribArray(posAttrib);
-	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	
-	if (uvs.size()>0)
-	{
-		GLuint uvBuffer;
-		glGenBuffers(1, &uvBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
-		glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
-
-		GLint texCoordAttribObj = glGetAttribLocation(shaderProgram, "texCoord");
-		glEnableVertexAttribArray(texCoordAttribObj);
-		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
-		glVertexAttribPointer(texCoordAttribObj, 2, GL_FLOAT, GL_FALSE, 0 * sizeof(float), (void*)(0 * sizeof(float)));
-	}
+	Texture myTexture;
 
 	GLuint texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
+	myTexture.CreateTextureJPG("Textures/10064_colosseum_diffuse.jpg", texture, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
 
-	// set the texture wrapping/filtering options (on the currently bound texture object)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	GLuint WeaponTex1;
+	glGenTextures(1, &WeaponTex1);
+	glBindTexture(GL_TEXTURE_2D, WeaponTex1);
+	myTexture.CreateTextureJPG("Textures/ak-47.jpg", WeaponTex1, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
 
-	stbi_set_flip_vertically_on_load(true);
+	GLuint WeaponTex2;
+	glGenTextures(1, &WeaponTex2);
+	glBindTexture(GL_TEXTURE_2D, WeaponTex2);
+	myTexture.CreateTextureJPG("Textures/ak-47-round.jpg", WeaponTex2, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
 
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load("PenguinDiffuseColor.jpg", &width, &height, &nrChannels, 0);
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
+
+	std::vector<GLuint> uvBuffer(file_names.size());
+	std::vector<GLuint> normalbuffer(file_names.size());
+
+	for (int i = 0; i < file_names.size(); i++) {
+
+		if (uvs[i].size() > 0)
+		{
+
+			glGenBuffers(1, &uvBuffer[i]);
+			glBindBuffer(GL_ARRAY_BUFFER, uvBuffer[i]);
+			glBufferData(GL_ARRAY_BUFFER, uvs[i].size() * sizeof(glm::vec2), &uvs[i][0], GL_STATIC_DRAW);
+
+		}
+
+		if (normals[i].size() > 0)
+		{
+
+			glGenBuffers(1, &normalbuffer[i]);
+			glBindBuffer(GL_ARRAY_BUFFER, normalbuffer[i]);
+			glBufferData(GL_ARRAY_BUFFER, normals[i].size() * sizeof(glm::vec3), &normals[i][0], GL_STATIC_DRAW);
+		}
 	}
-	else
-	{
-		std::cout << "Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
-
-
-	GLuint texture2;
-	glGenTextures(1, &texture2);
-	glBindTexture(GL_TEXTURE_2D, texture2);
-
-
-	// set the texture wrapping/filtering options (on the currently bound texture object)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-
-
-
-	data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cout << "Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
-
-	glUseProgram(shaderProgram);
-
-	GLuint textureLocation;
-	GLuint textureLocation2;
-
-	textureLocation = glGetUniformLocation(shaderProgram, "ourTexture");
-	textureLocation2 = glGetUniformLocation(shaderProgram, "ourTexture2");
-
-	glUniform1i(textureLocation, 0);
-	glUniform1i(textureLocation2, 1);
-
-	glm::mat4 model(1.0f);
-	//model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0, 0.0, 0.0));
-	//model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));
-
-	glm::mat4 projection;
-	projection = glm::perspective(glm::radians(fov), screenWidth / screenHeight, 0.1f, 100.0f);
-
-	GLuint modelLocation = glGetUniformLocation(shaderProgram, "model");
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-	GLuint viewLocation = glGetUniformLocation(shaderProgram, "view");
-	//glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
-
-	GLuint projectionLocation = glGetUniformLocation(shaderProgram, "projection");
-	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+	//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	shader.setInt("ourTexture", 0);
+	view = camera.getViewMatrix();
+	shader.setMat4("view", view);
+	shader.setMat4("projection", projection);
+	shader.set3Float("LightPosition_worldspace", lightPosition.x, lightPosition.y, lightPosition.y);
+	shader.set3Float("LightColor", lightColor.x , lightColor.y, lightColor.y);
+	shader.setFloat("LightPower", lightPower);
+	shader.set3Float("MaterialDiffuseColor", materialDiffuseColor.x, materialDiffuseColor.y, materialDiffuseColor.y);
+	shader.set3Float("MaterialSpecularColor", materialSpecularColor.x, materialSpecularColor.y, materialSpecularColor.y);
+	shader.set3Float("MaterialAmbientColor", materialAmbientColor.x, materialAmbientColor.y, materialAmbientColor.y);
+	glm::mat4 normalMatrix = glm::transpose(glm::inverse(model));
+	shader.setMat4("normalMatrix", normalMatrix);
 
 	//Window-----------------------------------------------------------------------------------------------------
+
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
-	
 	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	int start = SDL_GetTicks();
-
 	float deltaTime = 0.0f;	// Time between current frame and last frame
 	float lastFrameTime = SDL_GetTicks(); // Time of last frame
 
-
-	bool gameIsRunning = true;
-
-
-
-	SDL_Event windowEvent;
+	SDL_Event event;
 
 	while (gameIsRunning)
 	{
 		int now = SDL_GetTicks();
 		float deltaTime = (now - lastFrameTime) / 1000.f;
 		lastFrameTime = now;
+		timeElapsed += deltaTime;
 
-		// Event Loop
-		while (SDL_PollEvent(&windowEvent) != 0)
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_CULL_FACE);
+
+		while (SDL_PollEvent(&event) != 0) // Event Loop
 		{
-			if (windowEvent.type == SDL_QUIT)
-				gameIsRunning = false;
+			if (event.type == SDL_MOUSEMOTION) {
+				camera.processMouseInput(event.motion.x, event.motion.y);
+			}
 
-			processMouseInput(windowEvent, deltaTime);
+			if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
+				gameIsRunning = false;
+			}
 		}
-		processKeyboardInput(deltaTime);
+
+		const Uint8* keyState = SDL_GetKeyboardState(nullptr);
+		camera.processKeyboardInput(keyState, deltaTime);
+
 		//-----------------------------------------------------------------------------------------------------
 		
-		// glm::mat4 view;
-		glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+		view = camera.getViewMatrix();
+		projection = glm::perspective(glm::radians(camera.getFov()), screenWidth / screenHeight, 0.1f, 200.0f);
+		shader.setMat4("view", view);
+		shader.setMat4("projection", projection);
 
-		projection = glm::perspective(glm::radians(fov), screenWidth / screenHeight, 0.1f, 100.0f);
-		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+		glm::vec3 centerPosition = glm::vec3 (0.f,0.f,0.f);
+		float radius = 20.0f;
+		float speed = 1.0f;
+		float x = centerPosition.x + radius * cos(timeElapsed * speed);
+		float z = centerPosition.z + radius * sin(timeElapsed * speed);
 
+		//lightPosition = glm::vec3(x, centerPosition.y, z);
+		lightPosition = glm::vec3(x, 20 ,z);
+		shader.set3Float("LightPosition_worldspace", lightPosition.x, lightPosition.y, lightPosition.z);
 
 		//-----------------------------------------------------------------------------------------------------
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		shader.use();
 
-		// Draw .obj ---------------------------------------------------------------------------------------------------------------------
-		glUseProgram(shaderProgram);
+		for (int i = 0; i < file_names.size(); i++) {
+
+				glBufferData(GL_ARRAY_BUFFER, vertices[i].size() * sizeof(glm::vec3), &vertices[i][0], GL_STATIC_DRAW);
+				shader.setVertexAttribPointer("position", 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+				//shader.setVertexAttribPointer("color", 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+
+				if (uvs[i].size() > 0)
+				{
+					glBindBuffer(GL_ARRAY_BUFFER, uvBuffer[i]);
+					glBufferData(GL_ARRAY_BUFFER, uvs[i].size() * sizeof(glm::vec2), &uvs[i][0], GL_STATIC_DRAW);
+					shader.setVertexAttribPointer("texCoord", 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+				}
+
+				if (normals[i].size() > 0)
+				{
+					glBindBuffer(GL_ARRAY_BUFFER, normalbuffer[i]);
+					glBufferData(GL_ARRAY_BUFFER, normals[i].size() * sizeof(glm::vec3), &normals[i][0], GL_STATIC_DRAW);
+					shader.setVertexAttribPointer("normal", 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+				}
+
+			model = glm::mat4(1.f);
+			if (i == 1)
+			{
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, texture);
+
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(-1.0f, 0.0f, 0.0f));			
+
+				model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
+				model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
+
+				shader.setMat4("model", model);
+			}
+			else if (i == 2 || i == 3)
+			{
+				if (i == 3)
+				{
+					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_2D, WeaponTex1);
+				}
+				if (i == 2)
+				{
+					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_2D, WeaponTex2);
+				}
+
+				glm::vec3 cameraPos = camera.getPosition();
+				glm::vec3 cameraFront = camera.getRotation();
+				glm::vec3 cameraRight = glm::normalize(glm::cross(cameraFront, glm::vec3(0.0f, 1.0f, 0.0f)));
+				glm::vec3 cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront)); 
+
+				model = glm::mat4(1.0f);
+
+				glm::vec3 weaponOffset = cameraPos
+					+ cameraFront * 0.5f 
+					+ cameraRight * 0.2f 
+					- cameraUp * 0.3f;   
+
+				model = glm::translate(model, weaponOffset);
+
+				glm::mat4 rotation = glm::lookAt(glm::vec3(0.0f), cameraFront, cameraUp);
+				rotation = glm::transpose(rotation);
+				model *= rotation;
+
+				float angle = glm::radians(90.0f);
+				glm::mat4 extraRotation = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, - 1.0f, 0.0f));
+				model *= extraRotation;
+
+				model = glm::scale(model, glm::vec3(0.002f, 0.002f, 0.002f));
+
+				shader.setMat4("model", model);
+
+			}
+			else if (i == 0)
+			{
+				model = glm::translate(model, lightPosition);
+
+				shader.setMat4("model", model);
+			}
+
+			glDrawArrays(GL_TRIANGLES, 0, vertices[i].size());
+		}
 		glBindVertexArray(vao);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
-
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2);
-
-		glDrawArrays(GL_TRIANGLES, 0, vertices_.size());
 
 		SDL_GL_SwapWindow(window);
 	}
@@ -415,95 +286,6 @@ int main(int argc, char** argv)
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 	return 0;
-}
-
-//GLuint normalbuffer;
-//glGenBuffers(1, &normalbuffer);
-//glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-//glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
-
-//-----------------------------------------------------------------------------------------------------
-
-//GLint colorAttrib = glGetAttribLocation(shaderProgram, "color");
-//glEnableVertexAttribArray(colorAttrib);
-//glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-// 
-//for (unsigned int i = 0; i < 10; ++i)
-//{
-//	glm::mat4 model(1.0f);
-//	model = glm::translate(model, cubePositions[i]);
-//	model = glm::rotate(model, time, glm::vec3(0.5f, 1.0f, 0.0f));
-//	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-//	glDrawArrays(GL_TRIANGLES, 0, 36);
-//}
-
-//glm::mat4 trans(1.0f);
-////trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-////trans = glm::rotate(trans, time, glm::vec3(0.0f, 0.0f, 1.0f));
-////trans = glm::scale(trans, glm::vec3(glm::cos(time), glm::cos(time), 1.0f));
-//unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
-//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+};
 
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-//float vertices[] = {
-//	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-//	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-//	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-//	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-//	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-//	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-//
-//	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-//	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-//	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-//	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-//	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-//	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-//
-//	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-//	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-//	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-//	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-//	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-//	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-//
-//	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-//	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-//	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-//	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-//	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-//	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-//
-//	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-//	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-//	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-//	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-//	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-//	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-//
-//	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-//	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-//	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-//	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-//	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-//	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-//};
-//
-//glm::vec3 cubePositions[] = {
-//glm::vec3(0.0f,  0.0f,  0.0f),
-//glm::vec3(2.0f,  5.0f, -15.0f),
-//glm::vec3(-1.5f, -2.2f, -2.5f),
-//glm::vec3(-3.8f, -2.0f, -12.3f),
-//glm::vec3(2.4f, -0.4f, -3.5f),
-//glm::vec3(-1.7f,  3.0f, -7.5f),
-//glm::vec3(1.3f, -2.0f, -2.5f),
-//glm::vec3(1.5f,  2.0f, -2.5f),
-//glm::vec3(1.5f,  0.2f, -1.5f),
-//glm::vec3(-1.3f,  1.0f, -1.5f)
-//};
-//
-////float -> 32 bit = 4 bytes
-////double -> 64 bit = 8 bytes

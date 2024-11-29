@@ -13,12 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{a622c372-dfbd-4dcf-9d71-fde8f7d27c96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OpenGLDemoPedro.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stb_image.cpp">
@@ -27,12 +27,39 @@
     <ClCompile Include="objLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="objLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -49,5 +76,13 @@
     <Image Include="PenguinDiffuseColor.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\FragmentShader.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\VertexShader.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

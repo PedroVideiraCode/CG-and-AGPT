@@ -105,6 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Vendor\SDL2\include;$(SolutionDir)Vendor\glm;$(SolutionDir)Vendor\GLAD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,6 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,20 +132,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="objLoader.cpp" />
     <ClCompile Include="OpenGLDemoPedro.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="stb_image.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="objLoader.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="awesomeface.png" />
     <Image Include="container.jpg" />
     <Image Include="PenguinDiffuseColor.jpg" />
     <Image Include="PenguinDiffuseColor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\FragmentShader.glsl" />
+    <None Include="Shaders\VertexShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
