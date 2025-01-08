@@ -34,5 +34,5 @@ void main()
    outColor = vec4(MaterialAmbientColor, 1.0) + vec4(diffuseColor, 1.0) + vec4(specularColor, 1.0);
 
    outColor = outColor * texColor;
-    outColor.a = 1;
+    outColor.a = 0.5;
 }

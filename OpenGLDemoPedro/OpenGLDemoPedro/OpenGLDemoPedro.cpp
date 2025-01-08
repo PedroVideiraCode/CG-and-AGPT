@@ -9,6 +9,7 @@
 #include <filesystem>
 #include "Window.h"
 #include <glm/gtc/matrix_access.hpp>
+#include "text2D.h"
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -39,8 +40,8 @@ SDL_Window* window;
 int main(int argc, char** argv)
 {
 
-	float screenWidth = 800;
-	float screenHeight = 600	;
+	float screenWidth = 1920;
+	float screenHeight = 1080	;
 	windowH = new Window("SDL window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight);
 	window = windowH->GetWindow();
 	SDL_GLContext context = SDL_GL_CreateContext(window);
@@ -87,7 +88,7 @@ int main(int argc, char** argv)
 	GLuint texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	myTexture.CreateTextureJPG("Textures/10064_colosseum_diffuse.jpg", texture, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
+	myTexture.CreateTextureJPG("Textures/font16x16.bmp", texture, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
 
 	GLuint WeaponTex1;
 	glGenTextures(1, &WeaponTex1);
@@ -98,7 +99,7 @@ int main(int argc, char** argv)
 	glGenTextures(1, &WeaponTex2);
 	glBindTexture(GL_TEXTURE_2D, WeaponTex2);
 	myTexture.CreateTextureJPG("Textures/ak-47-round.jpg", WeaponTex2, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
-
+		initText2D("Textures/font16x16.bmp");
 
 	std::vector<GLuint> uvBuffer(file_names.size());
 	std::vector<GLuint> normalbuffer(file_names.size());
@@ -137,10 +138,12 @@ int main(int argc, char** argv)
 	glm::mat4 normalMatrix = glm::transpose(glm::inverse(model));
 	shader.setMat4("normalMatrix", normalMatrix);
 
-	//Window-----------------------------------------------------------------------------------------------------
 
+
+	//Window-----------------------------------------------------------------------------------------------------
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
+
 	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	int start = SDL_GetTicks();
@@ -176,6 +179,8 @@ int main(int argc, char** argv)
 
 		//-----------------------------------------------------------------------------------------------------
 		
+
+
 		view = camera.getViewMatrix();
 		projection = glm::perspective(glm::radians(camera.getFov()), screenWidth / screenHeight, 0.1f, 200.0f);
 		shader.setMat4("view", view);
@@ -187,12 +192,13 @@ int main(int argc, char** argv)
 		float x = centerPosition.x + radius * cos(timeElapsed * speed);
 		float z = centerPosition.z + radius * sin(timeElapsed * speed);
 
-		//lightPosition = glm::vec3(x, centerPosition.y, z);
+		lightPosition = glm::vec3(x, centerPosition.y, z);
 		lightPosition = glm::vec3(x, 20 ,z);
 		shader.set3Float("LightPosition_worldspace", lightPosition.x, lightPosition.y, lightPosition.z);
 
 		//-----------------------------------------------------------------------------------------------------
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		shader.use();
 
 		for (int i = 0; i < file_names.size(); i++) {

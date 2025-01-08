@@ -1,6 +1,9 @@
 #include <SDL.h>
 #include "Window.h"
 #include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glad/glad.h>
 
 Window::Window(std::string title, int windowPosX, int windowPosY, int windowWidth, int windowHeight)
 {

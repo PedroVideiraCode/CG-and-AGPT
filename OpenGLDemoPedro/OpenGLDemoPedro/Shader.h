@@ -19,7 +19,7 @@ public:
 	void setFloat(const std::string& name, float value) const;
 	void set3Float(const std::string& name, float v0, float v1, float v2) const;
 	void setMat4(const std::string& name, const glm::mat4& mat) const;
-
+	GLuint GetId() { return id; };
 private:
 	GLuint compileShader(GLenum type, const char* source);
 	void checkCompileErrors(GLuint shader, const std::string& type) const;
